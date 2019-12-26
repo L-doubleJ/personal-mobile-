@@ -1,0 +1,52 @@
+{
+    "pages": [ //pages数组中第一项表示应用启动页,
+       {
+            "path": "pages/login/login",
+            "style": {
+                "navigationBarTitleText": "登录"
+            }
+        }, {
+            "path": "pages/reg/reg",
+            "style": {
+                "navigationBarTitleText": "注册"
+            }
+        }, {
+            "path": "pages/pwd/pwd",
+            "style": {
+                "navigationBarTitleText": "找回密码"
+            }
+        }
+        ,{
+            "path" : "pages/remeber/remeber",
+            "style" : {"navigationBarTitleText": "备忘录"}
+        },
+		{
+		    "path" : "pages/expenses/expenses",
+		    "style" : {"navigationBarTitleText": "个人开支"}
+		}
+        ,{
+            "path" : "pages/relation/relation",
+            "style" : {"navigationBarTitleText": "个人关系"}
+        }
+    ],
+    "tabBar": {
+        "color": "#7a7e83",
+        "selectedColor": "#0faeff",
+        "backgroundColor": "#ffffff",
+        "list": [{
+            "pagePath": "pages/expenses/expenses",
+            "text": "个人开支"
+        }, {
+            "pagePath": "pages/remeber/remeber",
+            "text": "备忘录"
+        },{
+            "pagePath": "pages/relation/relation",
+            "text": "个人关系"
+        }]
+    },
+    "globalStyle": {
+        "navigationBarTextStyle": "white",
+        "navigationBarBackgroundColor": "#0faeff",
+        "backgroundColor": "#fbf9fe"
+    }
+}
