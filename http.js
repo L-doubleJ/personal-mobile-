@@ -10,7 +10,7 @@ const _request = (url, resolve, reject, data = {}, method = 'GET') => {
 		method,
 		data,
 		success:(res) => {
-			// console.log(url,res);
+			console.log(url,res);
 		resolve(res);
 		},
 		fail:(err) => {
@@ -29,8 +29,9 @@ export default ({
 	}else{
 		let isToken = getToken();
 		if(!isToken){
+			console.log('token失效')
 			uni.reLaunch({
-				url:'/pages/login/login.vue'
+				url:'/pages/login/login'
 			})
 		}
 	}

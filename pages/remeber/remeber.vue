@@ -12,8 +12,9 @@
 			<view class="bg-white padding list-wrapper">
 				<view class="list-item">标题：{{item.title}}</view>
 				<view class="list-item">时间：{{item.date}}</view>
-				<view class="list-item" :class="[item.state==1?'text-green':'text-red']">类型：{{item.state=='1'?'收入':'支出'}}</view>
-				<view class="list-item" :class="[item.state==1?'text-green':'text-red']">金额：￥{{item.money}}</view>
+				<view class="list-item text-red" v-if="item.state==1">优先级：{{item.state==1?'重要（高）':''}}</view>
+				<view class="list-item text-mauve"v-if="item.state==2">优先级：{{item.state==2?'一般（中）':''}}</view>
+				<view class="list-item text-yellow"v-if="item.state==3">优先级：{{item.state==3?'次要（低）':''}}</view>
 				<view class="list-item">备注：{{item.remark}}</view>
 				<view class="list-item"> <button type="warn" size="mini" @click="onDelete(item.id)">删除</button></view>
 			</view>
@@ -40,28 +41,30 @@
 			getList() {
 				this.$showLoading();
 				this.$http({
-					url: 'expenses/list'
+					url: 'remeber/list'
 				}).then(res => {
 					this.list = res.data.data
-				}).finally(()=>{
+				}).finally(() => {
 					this.$hideLoading();
 				})
 			},
-			onDelete(id){
+			onDelete(id) {
 				uni.showModal({
-				    title: '提示',
-				    content: '是否确定删除',
-				    success:  (res)=> {
-				        if (res.confirm) {
-				            this.$http({
-				            	url: 'expenses/delete',
-								method:'DELETE',
-								data:{id}
-				            }).then(res => {
-				            	this.getList();
-				            });
-				        }
-				    }
+					title: '提示',
+					content: '是否确定删除',
+					success: (res) => {
+						if (res.confirm) {
+							this.$http({
+								url: 'remeber/delete',
+								method: 'DELETE',
+								data: {
+									id
+								}
+							}).then(res => {
+								this.getList();
+							});
+						}
+					}
 				});
 				// this.$http({
 				// 	url: 'expenses/list',
