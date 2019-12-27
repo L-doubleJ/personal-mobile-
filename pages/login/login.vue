@@ -52,13 +52,16 @@
 					return;
 				}
 				this.$http({
-					url:'api/users/login',
+					url:'users/login',
 					method:'POST',
 					data:this.form
 				}).then(res=>{
 					if(res.data.success){
 						sessionStorage.setItem('token',res.data.data.token);
 						sessionStorage.setItem('userInfo',JSON.stringify(res.data.data));
+						uni.switchTab({
+							url: '/pages/expenses/expenses'
+						});
 						uni.showToast({
 							title:'登录成功',
 							icon:'none'

@@ -28,6 +28,10 @@
             "path" : "pages/relation/relation",
             "style" : {"navigationBarTitleText": "个人关系"}
         }
+        ,{
+            "path" : "pages/me/me",
+            "style" : {"navigationBarTitleText": "我的信息"}
+        }
     ],
     "tabBar": {
         "color": "#7a7e83",
@@ -42,6 +46,9 @@
         },{
             "pagePath": "pages/relation/relation",
             "text": "个人关系"
+        },{
+            "pagePath": "pages/me/me",
+            "text": "我的信息"
         }]
     },
     "globalStyle": {

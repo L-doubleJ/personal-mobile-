@@ -49,7 +49,7 @@
 					return;
 				}
 				this.$http({
-					url:'api/users/register',
+					url:'users/register',
 					method:'POST',
 					data:this.form
 				}).then(res=>{

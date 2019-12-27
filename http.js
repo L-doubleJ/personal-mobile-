@@ -6,11 +6,11 @@ const _request = (url, resolve, reject, data = {}, method = 'GET') => {
 		header:{
 			token: getToken()
 		},
-		url: 'http://localhost:3000/' + url,
+		url: 'http://localhost:3000/api/' + url,
 		method,
 		data,
 		success:(res) => {
-			console.log(res);
+			// console.log(url,res);
 		resolve(res);
 		},
 		fail:(err) => {
