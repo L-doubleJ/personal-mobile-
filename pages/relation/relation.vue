@@ -2,8 +2,8 @@
 	<view>
 		<view class="padding flex align-center">
 			<view class="uni-input flex align-center">
-				<input confirm-type="search" @confirm="" placeholder="请输入" />
-				<view class="search padding-lr-sm">搜索</view>
+				<input confirm-type="search" v-model="formData.keyWord" @confirm="getList" placeholder="请输入姓名或称呼" />
+				<view class="search padding-lr-sm"@click="getList">搜索</view>
 			</view>
 			<button type="primary" size="mini">新增</button>
 		</view>
@@ -30,7 +30,10 @@
 	export default {
 		data() {
 			return {
-				list: []
+				list: [],
+				formData:{
+					keyWord:''
+				}
 			}
 		},
 		onLoad() {
@@ -41,7 +44,8 @@
 			getList() {
 				this.$showLoading();
 				this.$http({
-					url: 'relation/list'
+					url: 'relation/list',
+					data:this.formData
 				}).then(res => {
 					this.list = res.data.data
 				}).finally(() => {

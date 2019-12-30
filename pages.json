@@ -32,6 +32,10 @@
             "path" : "pages/me/me",
             "style" : {"navigationBarTitleText": "我的信息"}
         }
+        ,{
+            "path" : "pages/expensesAdd/expensesAdd",
+            "style" : {"navigationBarTitleText": "新增"}
+        }
     ],
     "tabBar": {
         "color": "#7a7e83",

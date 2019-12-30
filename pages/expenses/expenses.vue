@@ -2,18 +2,18 @@
 	<view>
 		<view class="padding flex align-center">
 			<view class="uni-input flex align-center">
-				<input confirm-type="search" @confirm="" placeholder="请输入"  />
-				<view class="search padding-lr-sm">搜索</view>
+				<input confirm-type="search" @confirm="getList" v-model="formData.keyWord" placeholder="请输入标题"  />
+				<view class="search padding-lr-sm" @click="getList">搜索</view>
 			</view>
-			<button type="primary" size="mini">新增</button>
+			<button type="primary" size="mini" @click="onAdd">新增</button>
 		</view>
 
 		<block v-for="item in list">
 			<view class="bg-white padding list-wrapper">
 				<view class="list-item">标题：{{item.title}}</view>
 				<view class="list-item">时间：{{item.date}}</view>
-				<view class="list-item" :class="[item.state==1?'text-green':'text-red']">类型：{{item.state=='1'?'收入':'支出'}}</view>
-				<view class="list-item" :class="[item.state==1?'text-green':'text-red']">金额：￥{{item.money}}</view>
+				<view class="list-item" :class="[item.state=='1'?'text-green':'text-red']">类型：{{item.state=='1'?'收入':'支出'}}</view>
+				<view class="list-item" :class="[item.state=='1'?'text-green':'text-red']">金额：￥{{item.money}}</view>
 				<view class="list-item">备注：{{item.remark}}</view>
 				<view class="list-item"> <button type="warn" size="mini" @click="onDelete(item.id)">删除</button></view>
 			</view>
@@ -29,18 +29,30 @@
 	export default {
 		data() {
 			return {
-				list: []
+				list: [],
+				formData:{
+					keyWord:''
+				}
 			}
 		},
 		onLoad() {
+			uni.$on('expensesRefresh',()=>{
+				this.getList();
+			})
 			this.getList();
 			// this.$http()
 		},
 		methods: {
+			onAdd() {
+				uni.navigateTo({
+					url:'../expensesAdd/expensesAdd'
+				})
+			},
 			getList() {
 				this.$showLoading();
 				this.$http({
-					url: 'expenses/list'
+					url: 'expenses/list',
+					data:this.formData
 				}).then(res => {
 					this.list = res.data.data
 				}).finally(()=>{
