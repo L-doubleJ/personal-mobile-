@@ -1,6 +1,7 @@
 function getToken() {
 	return sessionStorage.getItem('token');
 }
+// http://localhost:3000/api/
 const _request = (url, resolve, reject, data = {}, method = 'GET') => {
 	uni.request({
 		header:{

@@ -59,8 +59,20 @@
 					money:'',
 					remark:''
 				},
+				type:'add',
 				index:0,
 				stateArr:['收入','支出']
+			}
+		},
+		onLoad(option){
+			if(option.item){
+				const item = JSON.parse(decodeURIComponent(option.item));
+				this.type = 'edit';
+				this.formData = item;
+				this.index = item.state - 1;
+				uni.setNavigationBarTitle({
+				    title: '编辑'
+				});
 			}
 		},
 		methods: {
@@ -75,7 +87,19 @@
 					uni.navigateBack();
 				})
 			},
+			onEdit() {
+				this.formData.state = this.index + 1 +'';
+				this.$http({
+					url:'expenses/update',
+					method:'POST',
+					data:this.formData
+				}).then(res=>{
+					uni.$emit('expensesRefresh');
+					uni.navigateBack();
+				})
+			},
 			onSubmit() {
+				this.formData.money+='';
 				if(!this.formData.money.trim()){
 					uni.showToast({
 						title:'请输入金额',
@@ -97,7 +121,12 @@
 					})
 					return;
 				}
-				this.onAdd();
+				if(this.type =='add'){
+					this.onAdd();
+				}else{
+					this.onEdit();
+				}
+				
 				// uni.navigateBack()
 			},
 			timeChange(e) {

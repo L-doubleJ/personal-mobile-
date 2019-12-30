@@ -2,14 +2,15 @@
 	<view>
 		<view class="padding flex align-center">
 			<view class="uni-input flex align-center">
-				<input confirm-type="search" @confirm="getList" v-model="formData.keyWord" placeholder="请输入标题"  />
+				<input confirm-type="search" @confirm="getList" v-model="formData.keyWord" placeholder="请输入标题" />
 				<view class="search padding-lr-sm" @click="getList">搜索</view>
 			</view>
 			<button type="primary" size="mini" @click="onAdd">新增</button>
 		</view>
 
 		<block v-for="item in list">
-			<view class="bg-white padding list-wrapper">
+			<!-- <navigator :url="'../expensesAdd/expensesAdd?item='+encodeURIComponent(JSON.stringify(item))"> -->
+			<view class="bg-white padding list-wrapper" @click="onEdit(item)">
 				<view class="list-item">标题：{{item.title}}</view>
 				<view class="list-item">时间：{{item.date}}</view>
 				<view class="list-item" :class="[item.state=='1'?'text-green':'text-red']">类型：{{item.state=='1'?'收入':'支出'}}</view>
@@ -17,7 +18,7 @@
 				<view class="list-item">备注：{{item.remark}}</view>
 				<view class="list-item"> <button type="warn" size="mini" @click="onDelete(item.id)">删除</button></view>
 			</view>
-
+			<!-- </navigator> -->
 		</block>
 		<view class="margin-top-xl padding flex justify-center text-lg text-grey" v-if="list==false">
 			暂无数据
@@ -30,50 +31,57 @@
 		data() {
 			return {
 				list: [],
-				formData:{
-					keyWord:''
+				formData: {
+					keyWord: ''
 				}
 			}
 		},
 		onLoad() {
-			uni.$on('expensesRefresh',()=>{
+			uni.$on('expensesRefresh', () => {
 				this.getList();
 			})
 			this.getList();
 			// this.$http()
 		},
 		methods: {
+			onEdit(item) {
+				uni.navigateTo({
+					url: '../expensesAdd/expensesAdd?item=' + encodeURIComponent(JSON.stringify(item))
+				})
+			},
 			onAdd() {
 				uni.navigateTo({
-					url:'../expensesAdd/expensesAdd'
+					url: '../expensesAdd/expensesAdd'
 				})
 			},
 			getList() {
 				this.$showLoading();
 				this.$http({
 					url: 'expenses/list',
-					data:this.formData
+					data: this.formData
 				}).then(res => {
 					this.list = res.data.data
-				}).finally(()=>{
+				}).finally(() => {
 					this.$hideLoading();
 				})
 			},
-			onDelete(id){
+			onDelete(id) {
 				uni.showModal({
-				    title: '提示',
-				    content: '是否确定删除',
-				    success:  (res)=> {
-				        if (res.confirm) {
-				            this.$http({
-				            	url: 'expenses/delete',
-								method:'DELETE',
-								data:{id}
-				            }).then(res => {
-				            	this.getList();
-				            });
-				        }
-				    }
+					title: '提示',
+					content: '是否确定删除',
+					success: (res) => {
+						if (res.confirm) {
+							this.$http({
+								url: 'expenses/delete',
+								method: 'DELETE',
+								data: {
+									id
+								}
+							}).then(res => {
+								this.getList();
+							});
+						}
+					}
 				});
 				// this.$http({
 				// 	url: 'expenses/list',
