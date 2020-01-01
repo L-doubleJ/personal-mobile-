@@ -36,6 +36,9 @@
 				}
 			}
 		},
+		onPullDownRefresh() {
+			this.getList();
+		},
 		onLoad() {
 			uni.$on('expensesRefresh', () => {
 				this.getList();
@@ -63,6 +66,7 @@
 					this.list = res.data.data
 				}).finally(() => {
 					this.$hideLoading();
+					uni.stopPullDownRefresh();
 				})
 			},
 			onDelete(id) {

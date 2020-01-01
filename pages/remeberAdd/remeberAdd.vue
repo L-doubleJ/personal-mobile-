@@ -30,14 +30,6 @@
 		</view>
 		<view class="margin-top">
 			<view class="text-lg">
-				金额：
-			</view>
-			<view class="margin-top-sm bg-white padding-tb-sm radius">
-				<input v-model="formData.money" class="uni-input padding-lr-sm" placeholder="请输入金额" />
-			</view>
-		</view>
-		<view class="margin-top">
-			<view class="text-lg">
 				备注：
 			</view>
 			<view class="margin-top-sm bg-white padding-tb-sm radius" style="max-height: 300upx;">
@@ -52,16 +44,14 @@
 	export default {
 		data() {
 			return {
-				formData: {
-					date: '',
-					state:'',
+				formData:{
+					remark:'',
 					title:'',
-					money:'',
-					remark:''
+					date:''
 				},
-				type:'add',
-				index:0,
-				stateArr:['收入','支出']
+				stateArr:['重要（高）','一般（中）','次要（低）'],
+				index:2,
+				type:'add'
 			}
 		},
 		onLoad(option){
@@ -76,43 +66,35 @@
 			}
 		},
 		methods: {
+			onEdit(){
+				this.$showLoading();
+				this.formData.state = this.index + 1 +'';
+				this.$http({
+					url:'remeber/update',
+					method:'POST',
+					data:this.formData
+				}).then(res=>{
+					uni.$emit('remeberRefresh');
+					uni.navigateBack();
+				}).finally(()=>{
+					this.$hideLoading();
+				})
+			},
 			onAdd() {
-				this.$showLoading();
 				this.formData.state = this.index + 1 +'';
+				this.$showLoading();
 				this.$http({
-					url:'expenses/add',
+					url:'remeber/add',
 					method:'POST',
 					data:this.formData
 				}).then(res=>{
-					uni.$emit('expensesRefresh');
+					uni.$emit('remeberRefresh');
 					uni.navigateBack();
 				}).finally(()=>{
 					this.$hideLoading();
 				})
 			},
-			onEdit() {
-				this.$showLoading();
-				this.formData.state = this.index + 1 +'';
-				this.$http({
-					url:'expenses/update',
-					method:'POST',
-					data:this.formData
-				}).then(res=>{
-					uni.$emit('expensesRefresh');
-					uni.navigateBack();
-				}).finally(()=>{
-					this.$hideLoading();
-				})
-			},
-			onSubmit() {
-				this.formData.money+='';
-				if(!this.formData.money.trim()){
-					uni.showToast({
-						title:'请输入金额',
-						icon:'none'
-					})
-					return;
-				}
+			onSubmit(){
 				if(!this.formData.title.trim()){
 					uni.showToast({
 						title:'请输标题',
@@ -127,18 +109,23 @@
 					})
 					return;
 				}
+				if(!this.formData.remark.trim()){
+					uni.showToast({
+						title:'请输入备注',
+						icon:'none'
+					})
+					return;
+				}
 				if(this.type =='add'){
 					this.onAdd();
 				}else{
 					this.onEdit();
 				}
-				
-				// uni.navigateBack()
 			},
 			timeChange(e) {
 				this.formData.date = e.detail.value
 			},
-			stateChange(e){
+			stateChange(e) {
 				this.index= e.detail.value
 			}
 		}

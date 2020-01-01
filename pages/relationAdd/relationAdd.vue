@@ -2,46 +2,42 @@
 	<view class="padding">
 		<view>
 			<view class="text-lg">
-				标题：
+				称呼：
 			</view>
 			<view class="margin-top-sm bg-white padding-tb-sm radius">
-				<input class="uni-input padding-lr-sm" v-model="formData.title" placeholder="请输入标题" />
+				<input class="uni-input padding-lr-sm" v-model="formData.name" placeholder="请输入标题" />
 			</view>
 		</view>
 		<view class="margin-top">
 			<view class="text-lg">
-				时间：
+				姓名：
 			</view>
 			<view class="margin-top-sm bg-white padding-tb-sm radius">
-				<picker mode="date" @change="timeChange">
-					<view class="input padding-lr-sm">{{formData.date?formData.date:'请选择日期'}}</view>
-				</picker>
+				<input class="uni-input padding-lr-sm" v-model="formData.realname" placeholder="请输入标题" />
 			</view>
 		</view>
 		<view class="margin-top">
 			<view class="text-lg">
-				类型：
+				电话：
 			</view>
 			<view class="margin-top-sm bg-white padding-tb-sm radius">
-				<picker @change="stateChange" :value="index" :range="stateArr">
-					<view class="input padding-lr-sm">{{stateArr[index]}}</view>
-				</picker>
+				<input class="uni-input padding-lr-sm" v-model="formData.phone" placeholder="请输入标题" />
 			</view>
 		</view>
 		<view class="margin-top">
 			<view class="text-lg">
-				金额：
+				关系：
 			</view>
 			<view class="margin-top-sm bg-white padding-tb-sm radius">
-				<input v-model="formData.money" class="uni-input padding-lr-sm" placeholder="请输入金额" />
+				<input class="uni-input padding-lr-sm" v-model="formData.relation" placeholder="请输入标题" />
 			</view>
 		</view>
 		<view class="margin-top">
 			<view class="text-lg">
 				备注：
 			</view>
-			<view class="margin-top-sm bg-white padding-tb-sm radius" style="max-height: 300upx;">
-				<textarea  class="uni-input padding-lr-sm" v-model="formData.remark" placeholder="请输入备注"/>
+			<view class="margin-top-sm bg-white padding-tb-sm radius">
+				<input class="uni-input padding-lr-sm" v-model="formData.remark" placeholder="请输入标题" />
 			</view>
 		</view>
 		<button size="mini" type="primary" class="margin-top" @click="onSubmit">确认</button>
@@ -52,16 +48,14 @@
 	export default {
 		data() {
 			return {
-				formData: {
-					date: '',
-					state:'',
-					title:'',
-					money:'',
-					remark:''
+				formData:{
+					remark:'',
+					name:'',
+					realname:'',
+					relation:'',
+					phone:''
 				},
-				type:'add',
-				index:0,
-				stateArr:['收入','支出']
+				type:'add'
 			}
 		},
 		onLoad(option){
@@ -69,60 +63,63 @@
 				const item = JSON.parse(decodeURIComponent(option.item));
 				this.type = 'edit';
 				this.formData = item;
-				this.index = item.state - 1;
 				uni.setNavigationBarTitle({
 				    title: '编辑'
 				});
 			}
 		},
 		methods: {
+			onEdit(){
+				this.$showLoading();
+				this.$http({
+					url:'relation/update',
+					method:'POST',
+					data:this.formData
+				}).then(res=>{
+					uni.$emit('relationRefresh');
+					uni.navigateBack();
+				}).finally(()=>{
+					this.$hideLoading();
+				})
+			},
 			onAdd() {
 				this.$showLoading();
-				this.formData.state = this.index + 1 +'';
 				this.$http({
-					url:'expenses/add',
+					url:'relation/add',
 					method:'POST',
 					data:this.formData
 				}).then(res=>{
-					uni.$emit('expensesRefresh');
+					uni.$emit('relationRefresh');
 					uni.navigateBack();
 				}).finally(()=>{
 					this.$hideLoading();
 				})
 			},
-			onEdit() {
-				this.$showLoading();
-				this.formData.state = this.index + 1 +'';
-				this.$http({
-					url:'expenses/update',
-					method:'POST',
-					data:this.formData
-				}).then(res=>{
-					uni.$emit('expensesRefresh');
-					uni.navigateBack();
-				}).finally(()=>{
-					this.$hideLoading();
-				})
-			},
-			onSubmit() {
-				this.formData.money+='';
-				if(!this.formData.money.trim()){
+			onSubmit(){
+				if(this.formData.phone.length>11){
 					uni.showToast({
-						title:'请输入金额',
+						title:'请输入正确的手机号',
 						icon:'none'
 					})
 					return;
 				}
-				if(!this.formData.title.trim()){
+				if(!this.formData.name.trim()){
 					uni.showToast({
 						title:'请输标题',
 						icon:'none'
 					})
 					return;
 				}
-				if(!this.formData.date.trim()){
+				if(!this.formData.realname.trim()){
 					uni.showToast({
-						title:'请选择时间',
+						title:'请选输入姓名',
+						icon:'none'
+					})
+					return;
+				}
+				if(!this.formData.relation.trim()){
+					uni.showToast({
+						title:'请输入关系',
 						icon:'none'
 					})
 					return;
@@ -132,15 +129,7 @@
 				}else{
 					this.onEdit();
 				}
-				
-				// uni.navigateBack()
 			},
-			timeChange(e) {
-				this.formData.date = e.detail.value
-			},
-			stateChange(e){
-				this.index= e.detail.value
-			}
 		}
 	}
 </script>

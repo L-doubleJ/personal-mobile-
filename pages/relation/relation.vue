@@ -3,13 +3,13 @@
 		<view class="padding flex align-center">
 			<view class="uni-input flex align-center">
 				<input confirm-type="search" v-model="formData.keyWord" @confirm="getList" placeholder="请输入姓名或称呼" />
-				<view class="search padding-lr-sm"@click="getList">搜索</view>
+				<view class="search padding-lr-sm" @click="getList">搜索</view>
 			</view>
-			<button type="primary" size="mini">新增</button>
+			<button type="primary" size="mini" @click="onAdd">新增</button>
 		</view>
 
 		<block v-for="item in list">
-			<view class="bg-white padding list-wrapper">
+			<view class="bg-white padding list-wrapper" :key="item.id" @click="onEdit(item)">
 				<view class="list-item">称呼：{{item.name}}</view>
 				<view class="list-item">姓名：{{item.realname}}</view>
 				
@@ -36,11 +36,27 @@
 				}
 			}
 		},
+		onPullDownRefresh() {
+			this.getList();
+		},
 		onLoad() {
+			uni.$on('relationRefresh', () => {
+				this.getList();
+			})
 			this.getList();
 			// this.$http()
 		},
 		methods: {
+			onEdit(item) {
+				uni.navigateTo({
+					url: '../relationAdd/relationAdd?item=' + encodeURIComponent(JSON.stringify(item))
+				})
+			},
+			onAdd(){
+				uni.navigateTo({
+					url: '../relationAdd/relationAdd'
+				})
+			},
 			getList() {
 				this.$showLoading();
 				this.$http({
@@ -50,6 +66,7 @@
 					this.list = res.data.data
 				}).finally(() => {
 					this.$hideLoading();
+					uni.stopPullDownRefresh();
 				})
 			},
 			onDelete(id) {

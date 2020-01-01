@@ -5,11 +5,11 @@
 				<input confirm-type="search" @confirm="getList" v-model="formData.keyWord" placeholder="请输入标题" />
 				<view class="search padding-lr-sm" @click="getList">搜索</view>
 			</view>
-			<button type="primary" size="mini">新增</button>
+			<button type="primary" size="mini" @click="onAdd">新增</button>
 		</view>
 
 		<block v-for="item in list">
-			<view class="bg-white padding list-wrapper">
+			<view class="bg-white padding list-wrapper" @click="onEdit(item)">
 				<view class="list-item">标题：{{item.title}}</view>
 				<view class="list-item">时间：{{item.date}}</view>
 				<view class="list-item text-red" v-if="item.state==1">优先级：{{item.state==1?'重要（高）':''}}</view>
@@ -36,11 +36,27 @@
 				}
 			}
 		},
+		onPullDownRefresh() {
+			this.getList();
+		},
 		onLoad() {
+			uni.$on('remeberRefresh', () => {
+				this.getList();
+			})
 			this.getList();
 			// this.$http()
 		},
 		methods: {
+			onAdd(){
+				uni.navigateTo({
+					url: '../remeberAdd/remeberAdd'
+				})
+			},
+			onEdit(item) {
+				uni.navigateTo({
+					url: '../remeberAdd/remeberAdd?item=' + encodeURIComponent(JSON.stringify(item))
+				})
+			},
 			getList() {
 				this.$showLoading();
 				this.$http({
@@ -50,6 +66,7 @@
 					this.list = res.data.data
 				}).finally(() => {
 					this.$hideLoading();
+					uni.stopPullDownRefresh();
 				})
 			},
 			onDelete(id) {
