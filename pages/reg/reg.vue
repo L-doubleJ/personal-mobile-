@@ -9,6 +9,10 @@
                 <text class="title">密码：</text>
                 <m-input type="password" displayable v-model="form.password" placeholder="请输入密码"></m-input>
             </view>
+			<view class="input-row border">
+			    <text class="title">QQ邮箱：</text>
+			    <m-input type="text" v-model="form.email" placeholder="请输入qq邮箱"></m-input>
+			</view>
         </view>
         <view class="btn-row">
             <button type="primary" class="primary" @tap="register">注册</button>
@@ -27,7 +31,8 @@
             return {
 				form:{
 					username:'',
-					password:''
+					password:'',
+					email:''
 				}
                
             }
@@ -48,6 +53,15 @@
 					})
 					return;
 				}
+				
+					const reg = /^\d{5,12}@[qQ][qQ]\.(com|cn)$/;
+					if(!reg.test(this.form.email)){
+						uni.showToast({
+							title:'请输入正确的qq邮箱',
+							icon:'none'
+						})
+						return;
+					}
 				this.$http({
 					url:'users/register',
 					method:'POST',

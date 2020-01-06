@@ -7,7 +7,8 @@
 			</view>
 			<button type="primary" size="mini" @click="onAdd">新增</button>
 		</view>
-
+		<view class="text-green flex justify-end padding-right">总收入：{{gettotal}}</view>
+		<view class="text-red flex justify-end padding-right">总支出：{{paytotal}}</view>
 		<block v-for="item in list">
 			<!-- <navigator :url="'../expensesAdd/expensesAdd?item='+encodeURIComponent(JSON.stringify(item))"> -->
 			<view class="bg-white padding list-wrapper" @click="onEdit(item)">
@@ -33,7 +34,9 @@
 				list: [],
 				formData: {
 					keyWord: ''
-				}
+				},
+				gettotal:'',
+				paytotal:''
 			}
 		},
 		onPullDownRefresh() {
@@ -63,7 +66,9 @@
 					url: 'expenses/list',
 					data: this.formData
 				}).then(res => {
-					this.list = res.data.data
+					this.list = res.data.data.data;
+					     this.gettotal = res.data.data.gettotal;
+					          this.paytotal = res.data.data.paytotal;
 				}).finally(() => {
 					this.$hideLoading();
 					uni.stopPullDownRefresh();
@@ -103,7 +108,7 @@
 		margin-top: 30upx;
 	}
 
-	.list-wrapper+.list-wrapper {
+	.list-wrapper{
 		margin-top: 20upx;
 	}
 

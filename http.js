@@ -25,7 +25,7 @@ export default ({
 	data,
 	method
 }) => {
-	if(url.includes('login')){
+	if(url.includes('login') || url.includes('register')  ){
 		
 	}else{
 		let isToken = getToken();

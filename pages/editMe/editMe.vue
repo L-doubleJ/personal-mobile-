@@ -77,6 +77,14 @@
 					})
 					return;
 				}
+				const reg = /^\d{5,12}@[qQ][qQ]\.(com|cn)$/;
+				if(!reg.test(this.formData.email)){
+					uni.showToast({
+						title:'请输入正确的qq邮箱',
+						icon:'none'
+					})
+					return;
+				}
 				this.onEdit();
 			}
 		}
